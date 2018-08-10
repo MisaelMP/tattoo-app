@@ -85,5 +85,6 @@
   <%= f.submit "Save changes" %>
 
 <% end %>
+<%= button_to "Delete Profile", user_path(@current_user), :class => 'btn first', :method => 'delete', :data => {:confirm => 'Are you sure?'} %>
   </div>
 </div>
