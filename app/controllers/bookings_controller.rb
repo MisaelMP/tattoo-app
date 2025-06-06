@@ -11,15 +11,21 @@ class BookingsController < ApplicationController
   end
 
   def create
-
-    # TODO Make sure artist is not double booked.
-
-    @booking = Booking.new
+    artist_id = booking_params[:artist_id]
+    date = booking_params[:date]
+    start_hour = booking_params[:start_hour]
+    if Booking.exists?(artist_id: artist_id, date: date, start_hour: start_hour)
+      flash[:error] = 'Artist is already booked for that time.'
+      redirect_back fallback_location: root_path
+      return
+    end
+    @booking = Booking.new(booking_params)
     @booking.customer_id = @current_user.id
-    @booking.date = params[:booking][:date]
-    @booking.start_hour = params[:booking][:start_hour]
-    @booking.artist_id = params[:booking][:artist_id]
-    @booking.save
+    if @booking.save
+      redirect_to @booking
+    else
+      render :new
+    end
   end
 
   def new
@@ -36,5 +42,11 @@ class BookingsController < ApplicationController
   end
 
   def update
+  end
+
+  private
+
+  def booking_params
+    params.require(:booking).permit(:artist_id, :date, :start_hour)
   end
 end
