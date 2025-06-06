@@ -23,15 +23,22 @@ class VisitsController < ApplicationController
 
   def update
     visit = Visit.find params[:id]
-  visit.update visit_params
-  redirect_to visit
+    unless @current_user.visits.include? visit
+      redirect_to root_path, alert: 'Not authorized'
+      return
+    end
+    visit.update visit_params
+    redirect_to visit
   end
 
   def create
-    visit = Visit.create visit_params
-    current_user.visits << visit
-    flash[:success] =  "Visit Created!"
-    redirect_to visit # GET the show pag
+    visit = current_user.visits.build visit_params
+    if visit.save
+      flash[:success] =  "Visit Created!"
+      redirect_to visit
+    else
+      render :new
+    end
   end
 
 
@@ -46,7 +53,7 @@ class VisitsController < ApplicationController
   # Strong params: create a whitelist of permitted parameters
 private
 def visit_params
-  params.require(:visit).permit(:start_date, :user_id, :end_date, :location, :latitude, :longitude)
+  params.require(:visit).permit(:start_date, :end_date, :location, :latitude, :longitude)
 end
 end
 #  start_date :date

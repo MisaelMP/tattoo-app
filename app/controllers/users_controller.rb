@@ -25,6 +25,10 @@ class UsersController < ApplicationController
 
   def update
     user = User.find params[:id]
+    unless user == @current_user
+      redirect_to root_path, alert: 'Not authorized'
+      return
+    end
     user.update user_params
     if params['user']['profile_image']
       cloudinary = Cloudinary::Uploader.upload(params['user']['profile_image'])
