@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "echo 'No build step required'"
+    "build": "echo 'No build step required'",
+    "build:css": "sass ./app/assets/stylesheets/application.css ./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   },
-  "dependencies": {}
+  "dependencies": {
+    "sass": "^1.71.1"
+  }
 }
