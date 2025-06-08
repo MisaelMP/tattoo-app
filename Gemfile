@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '3.2.2'
 
-# Rails 7 
+# Rails 7
 gem 'rails', '~> 7.1.3'
 
 # Database
@@ -13,12 +13,11 @@ gem 'puma', '~> 6.4'
 
 # Modern JavaScript & CSS support
 gem 'importmap-rails'
-# Optional: use jsbundling/cssbundling if preferred
 gem 'jsbundling-rails'
 gem 'cssbundling-rails'
 gem 'terser'
 
-# Style preprocessor (optional)
+# Style preprocessor
 gem 'sassc-rails'
 
 # JSON builder
@@ -59,4 +58,5 @@ end
 # Platform support
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
-gem "coffee-script", "~> 2.4"
+# JavaScript support
+gem 'coffee-script', '~> 2.4'

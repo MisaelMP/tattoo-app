@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "echo 'No build step required'",
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
     "build:css": "sass ./app/assets/stylesheets/application.css ./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   },
   "dependencies": {
     "sass": "^1.71.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.5"
   }
 }
