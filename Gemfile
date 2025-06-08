@@ -26,6 +26,7 @@ gem 'importmap-rails'
 # Optional: use jsbundling/cssbundling if preferred
 gem 'jsbundling-rails'
 gem 'cssbundling-rails'
+gem 'uglifier'
 
 # Style preprocessor (optional)
 gem 'sassc-rails'

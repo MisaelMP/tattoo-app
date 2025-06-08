@@ -267,6 +267,8 @@ GEM
     timeout (0.4.3)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
+    uglifier (4.2.1)
+      execjs (>= 0.3.0, < 3)
     underscore-rails (1.8.3)
     uri (1.0.3)
     web-console (4.2.1)
@@ -320,6 +322,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen
   tzinfo-data
+  uglifier
   underscore-rails
   web-console
 
