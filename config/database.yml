@@ -26,12 +26,7 @@ development:
 
 production:
   <<: *default
-  database: tattoo_app_production
-  username: <%= ENV['POSTGRES_USER'] %>
-  password: <%= ENV['POSTGRES_PASSWORD'] %>
-  host: <%= ENV['POSTGRES_HOST'] %>
   url: <%= ENV['DATABASE_URL'] %>
-  sslmode: require
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
