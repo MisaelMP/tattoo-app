@@ -2,7 +2,9 @@ databases:
   - name: tattoo_app_db
     databaseName: tattoo_app_production
     user: tattoo_app
+    region: Ohio (US East)
     plan: free
+    ipAllowList: []
 
 services:
   - type: web

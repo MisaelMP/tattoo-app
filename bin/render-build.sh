@@ -14,12 +14,37 @@ echo "CLOUDINARY_API_SECRET is set: ${CLOUDINARY_API_SECRET:+true}"
 bundle install --without development test
 
 # Wait for PostgreSQL to be ready
-# until PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d postgres -c '\q' 2>/dev/null; do
-#   echo "Postgres is unavailable - sleeping"
-#   sleep 1
-# done
+echo "Waiting for PostgreSQL..."
+sleep 10
 
-# echo "Postgres is available, running migrations..."
+# Clear tmp directory and assets
+bundle exec rails tmp:clear
+bundle exec rails assets:clean
+bundle exec rails assets:precompile
+
+# Database setup with retries
+max_retries=5
+counter=0
+until bundle exec rails db:migrate || [ $counter -eq $max_retries ]; do
+  echo "Migration failed. Retrying in 5 seconds..."
+  counter=$((counter + 1))
+  sleep 5
+done
+
+if [ $counter -eq $max_retries ]; then
+  echo "Failed to migrate database after $max_retries attempts"
+  exit 1
+fi
+  echo "Database connection not ready - sleeping"
+  sleep 2
+done
+
+echo "Database connection ready!"
+
+# Set up database
+bundle exec rails db:migrate
+
+echo "Postgres is available, running migrations..."
 
 # Run assets precompilation first
 bundle exec rails assets:clean
