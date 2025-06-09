@@ -54,6 +54,11 @@ Rails.application.configure do
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = :debug
+  
+  # Session configuration
+  config.session_store :cookie_store, key: '_tattoo_app_session', expire_after: 24.hours
+  config.middleware.use ActionDispatch::Cookies
+  config.middleware.use ActionDispatch::Session::CookieStore
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]

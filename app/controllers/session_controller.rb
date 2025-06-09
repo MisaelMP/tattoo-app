@@ -14,10 +14,13 @@ class SessionController < ApplicationController
     
     begin
       if @user.save
+        Rails.logger.info "User created successfully: #{@user.id}"
+        
         if params['profile_image']
           begin
             cloudinary = Cloudinary::Uploader.upload(params['profile_image'])
             @user.profile_image = cloudinary['url']
+            Rails.logger.info "Profile image uploaded successfully"
           rescue => e
             Rails.logger.error "Cloudinary upload error: #{e.message}"
             @user.profile_image = 'https://www.goaltos.com/wp-content/uploads/sites/4559/2018/01/avatar-1577909_960_720.png'
