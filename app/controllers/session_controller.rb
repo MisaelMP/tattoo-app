@@ -1,6 +1,4 @@
 class SessionController < ApplicationController
-  skip_before_action :authorize, only: [:form_login_signup, :process_login, :process_signup]
-  
   # This controller action shows the login and signup page
   def form_login_signup
     @user = User.new
