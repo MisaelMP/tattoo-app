@@ -2,8 +2,13 @@
 # exit on error
 set -o errexit
 
+# Debug info
+echo "CLOUDINARY_CLOUD_NAME is set: ${CLOUDINARY_CLOUD_NAME:+true}"
+echo "CLOUDINARY_API_KEY is set: ${CLOUDINARY_API_KEY:+true}"
+echo "CLOUDINARY_API_SECRET is set: ${CLOUDINARY_API_SECRET:+true}"
+
 # Install dependencies
-bundle install
+bundle install --without development test
 
 # Run assets precompilation first
 bundle exec rails assets:clean
