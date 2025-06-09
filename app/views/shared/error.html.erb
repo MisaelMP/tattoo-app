@@ -1,10 +1,30 @@
-<h1>Something went wrong</h1>
-<p>We're sorry, but something went wrong. Please try again later.</p>
-<% if Rails.env.development? || Rails.env.test? %>
-  <div class="error-details">
-    <%= debug(flash) %>
-  </div>
-  <% end %>
-    <p>
-      <%= link_to 'Back to Home' , root_path %>
-    </p>
+<div class="error-container">
+  <h1>Something went wrong</h1>
+  <p>We're sorry, but something went wrong. Please try again later.</p>
+
+  <% if Rails.env.production? %>
+    <div class="error-details">
+      <% if @error_message %>
+        <p class="error-message">
+          <%= @error_message %>
+        </p>
+        <% end %>
+          <% if flash[:error] %>
+            <p class="flash-error">
+              <%= flash[:error] %>
+            </p>
+            <% end %>
+    </div>
+    <% end %>
+
+      <% if Rails.env.development? || Rails.env.test? %>
+        <div class="error-details">
+          <%= debug(flash) %>
+            <%= debug(@error_message) if @error_message %>
+        </div>
+        <% end %>
+
+          <p>
+            <%= link_to 'Back to Home' , root_path, class: 'home-link' %>
+          </p>
+</div>

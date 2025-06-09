@@ -3,12 +3,23 @@
 set -o errexit
 
 # Debug info
+echo "Starting build script..."
+echo "RAILS_ENV: $RAILS_ENV"
+echo "DATABASE_URL is set: ${DATABASE_URL:+true}"
 echo "CLOUDINARY_CLOUD_NAME is set: ${CLOUDINARY_CLOUD_NAME:+true}"
 echo "CLOUDINARY_API_KEY is set: ${CLOUDINARY_API_KEY:+true}"
 echo "CLOUDINARY_API_SECRET is set: ${CLOUDINARY_API_SECRET:+true}"
 
 # Install dependencies
 bundle install --without development test
+
+# Wait for PostgreSQL to be ready
+until PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d postgres -c '\q' 2>/dev/null; do
+  echo "Postgres is unavailable - sleeping"
+  sleep 1
+done
+
+echo "Postgres is available, running migrations..."
 
 # Run assets precompilation first
 bundle exec rails assets:clean
