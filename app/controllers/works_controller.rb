@@ -1,5 +1,5 @@
 class WorksController < ApplicationController
-  before_action :authorize, :except => [:index]
+  before_action :authorize, :except => [:index, :show]
   
   def index
     @works = Work.all
@@ -14,6 +14,14 @@ class WorksController < ApplicationController
 
   def show
     @work = Work.find params[:id]
+  rescue ActiveRecord::RecordNotFound => e
+    Rails.logger.error "Work not found: #{e.message}"
+    flash[:error] = "Work not found"
+    redirect_to works_path
+  rescue => e
+    Rails.logger.error "Error in show: #{e.message}"
+    flash[:error] = "An error occurred"
+    redirect_to works_path
   end
 
   def edit
