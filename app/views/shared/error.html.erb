@@ -1,0 +1,10 @@
+<h1>Something went wrong</h1>
+<p>We're sorry, but something went wrong. Please try again later.</p>
+<% if Rails.env.development? || Rails.env.test? %>
+  <div class="error-details">
+    <%= debug(flash) %>
+  </div>
+  <% end %>
+    <p>
+      <%= link_to 'Back to Home' , root_path %>
+    </p>
