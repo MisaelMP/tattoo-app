@@ -14,12 +14,12 @@ echo "CLOUDINARY_API_SECRET is set: ${CLOUDINARY_API_SECRET:+true}"
 bundle install --without development test
 
 # Wait for PostgreSQL to be ready
-until PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d postgres -c '\q' 2>/dev/null; do
-  echo "Postgres is unavailable - sleeping"
-  sleep 1
-done
+# until PGPASSWORD=$POSTGRES_PASSWORD psql -h $POSTGRES_HOST -U $POSTGRES_USER -d postgres -c '\q' 2>/dev/null; do
+#   echo "Postgres is unavailable - sleeping"
+#   sleep 1
+# done
 
-echo "Postgres is available, running migrations..."
+# echo "Postgres is available, running migrations..."
 
 # Run assets precompilation first
 bundle exec rails assets:clean
