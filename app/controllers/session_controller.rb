@@ -1,49 +1,65 @@
 class SessionController < ApplicationController
-
   # This controller action shows the login and signup page
   def form_login_signup
-   @user = User.new
+    @user = User.new
+  rescue => e
+    Rails.logger.error "Error in form_login_signup: #{e.message}"
+    flash[:error] = "An error occurred. Please try again."
+    redirect_to root_path
   end
 
   # This controller action process the data entered on the SIGNUP form
   def process_signup
-    flash[:notice] = "Does this code even execute?"
     @user = User.new user_params
-    if @user.save
-      if params['profile_image']
-        cloudinary = Cloudinary::Uploader.upload(params['profile_image'])
-        @user.profile_image = cloudinary['url']
+    
+    begin
+      if @user.save
+        if params['profile_image']
+          begin
+            cloudinary = Cloudinary::Uploader.upload(params['profile_image'])
+            @user.profile_image = cloudinary['url']
+          rescue => e
+            Rails.logger.error "Cloudinary upload error: #{e.message}"
+            @user.profile_image = 'https://www.goaltos.com/wp-content/uploads/sites/4559/2018/01/avatar-1577909_960_720.png'
+          end
+        else
+          @user.profile_image = 'https://www.goaltos.com/wp-content/uploads/sites/4559/2018/01/avatar-1577909_960_720.png'
+        end
+        
+        @user.save
+        session[:user_id] = @user.id
+        flash[:notice] = "Thanks for joining #{@user.name}"
+        redirect_to root_path
       else
-        @user.profile_image = 'https://www.goaltos.com/wp-content/uploads/sites/4559/2018/01/avatar-1577909_960_720.png'
+        Rails.logger.error "User save failed: #{@user.errors.full_messages.join(', ')}"
+        flash[:error] = @user.errors.full_messages.join(', ')
+        render :form_login_signup
       end
-      @user.save
-      session[:user_id] = @user.id
-      flash[:notice] = "Thanks for joining #{@user.name}"
-      redirect_to root_path # Redirect to home if the account is valid
-    else
-      flash[:notice] = "Sorry, we couldn't process your signup requests"
-      render :form_login_signup # Let them retry the form again
+    rescue => e
+      Rails.logger.error "Error in process_signup: #{e.message}"
+      flash[:error] = "An error occurred during signup. Please try again."
+      render :form_login_signup
     end
   end
-
-
 
   # This controller action process the data entered on the LOGIN form
   def process_login
-  # This is the action to which the login form post request is posted. It will add the user's id to the session hash, which will be used for authentication and authorization throughout the session.
-    user = User.find_by :email => params[:email]
-    if user.present? && user.authenticate(params[:password])
-      # If a user record with the entered in the form is present AND the user is authenticated (using bcrypt's authenticate method and the password entered in the form), store their id in the session hash and redirect them to the root path.
-      session[:user_id] = user.id
-      flash[:notice] = "Welcome back #{user.name}"
-      redirect_to works_path
-    else
-      # If the user cannot be authenticated, redirect them to the login_path.
-      flash[:error] = "Sorry, you did not enter valid credentials"
+    begin
+      user = User.find_by :email => params[:email]
+      if user.present? && user.authenticate(params[:password])
+        session[:user_id] = user.id
+        redirect_to root_path
+      else
+        flash[:error] = "Invalid email or password"
+        redirect_to login_path
+      end
+    rescue => e
+      Rails.logger.error "Error in process_login: #{e.message}"
+      flash[:error] = "An error occurred during login. Please try again."
       redirect_to login_path
     end
   end
-
+  
   # This is the action to which the user sign-out delete request is posted.
   def logout
     session[:user_id] = nil

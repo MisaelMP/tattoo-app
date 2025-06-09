@@ -1,7 +1,11 @@
 class WorksController < ApplicationController
   before_action :authorize, :except => [:index]
+  
   def index
     @works = Work.all
+  rescue => e
+    Rails.logger.error "Error in works#index: #{e.message}"
+    render json: { error: 'An error occurred' }, status: :internal_server_error
   end
 
   def new
@@ -27,17 +31,28 @@ class WorksController < ApplicationController
       redirect_to root_path, alert: 'Not authorized'
       return
     end
+    
     if work.update work_params
       if params['work']['artwork_image']
-        cloudinary = Cloudinary::Uploader.upload(params['work']['artwork_image'])
-        work.artwork_image = cloudinary['url']
-        work.save
+        begin
+          cloudinary = Cloudinary::Uploader.upload(params['work']['artwork_image'])
+          work.artwork_image = cloudinary['url']
+          work.save
+        rescue => e
+          Rails.logger.error "Error uploading image: #{e.message}"
+          flash[:error] = "Error uploading image"
+          redirect_to edit_work_path(work)
+          return
+        end
       end
       redirect_to work
     else
-      @work = work
       render :edit
     end
+  rescue => e
+    Rails.logger.error "Error in works#update: #{e.message}"
+    flash[:error] = "An error occurred"
+    redirect_to edit_work_path(work)
   end
 
   def create
@@ -54,8 +69,6 @@ class WorksController < ApplicationController
       render :new
     end
   end
-
-
 
   def destroy
     work = Work.find params[:id]
