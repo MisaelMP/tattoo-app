@@ -13,9 +13,19 @@ echo "CLOUDINARY_API_SECRET is set: ${CLOUDINARY_API_SECRET:+true}"
 # Install dependencies
 bundle install --without development test
 
-# Wait for PostgreSQL to be ready
+# Print database connection info (without credentials)
+echo "Database connection info:"
+echo "POSTGRES_HOST: ${POSTGRES_HOST}"
+echo "Database name from URL: $(echo $DATABASE_URL | awk -F'/' '{print $NF}')"
+
+# Wait for PostgreSQL to be ready with explicit host check
 echo "Waiting for PostgreSQL..."
-sleep 10
+until PGPASSWORD=$POSTGRES_PASSWORD psql -h "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$(echo $DATABASE_URL | awk -F'/' '{print $NF}')" -c '\q' 2>/dev/null; do
+  echo >&2 "Postgres is unavailable - sleeping"
+  sleep 2
+done
+
+echo "PostgreSQL is available"
 
 # Clear tmp directory and assets
 bundle exec rails tmp:clear
