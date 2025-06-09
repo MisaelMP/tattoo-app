@@ -6,10 +6,8 @@ class ApplicationController < ActionController::Base
   before_action :current_user
 
   def current_user
-    if session[:user_id].present?
-      @current_user ||= User.find_by(id: session[:user_id])
-      session[:user_id] = nil unless @current_user.present?
-    end
+    return nil unless session[:user_id].present?
+    @current_user ||= User.find_by(id: session[:user_id])
     @current_user
   rescue => e
     Rails.logger.error "Error in current_user: #{e.message}"

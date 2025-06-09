@@ -1,4 +1,7 @@
 class SessionController < ApplicationController
+  # These pages should be accessible without login
+  skip_before_action :current_user, except: [:logout]
+  
   # This controller action shows the login and signup page
   def form_login_signup
     @user = User.new
