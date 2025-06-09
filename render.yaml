@@ -4,7 +4,9 @@ databases:
     user: tattoo_app
     region: Ohio (US East)
     plan: free
-    ipAllowList: []
+    ipAllowList:
+      - source: 75.24.32.153/32
+        description: Local development machine
 
 services:
   - type: web
