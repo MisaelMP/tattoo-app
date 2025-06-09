@@ -16,6 +16,7 @@ gem 'importmap-rails'
 gem 'sprockets-rails'
 gem 'sassc-rails'
 gem 'terser' # Add JavaScript compression for production
+gem 'mini_racer'  # Add JavaScript runtime for asset compilation
 
 # JSON builder
 gem 'jbuilder', '~> 2.11'
