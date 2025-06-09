@@ -8,13 +8,25 @@ services:
   - type: web
     name: tattoo-app
     env: ruby
-    buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec puma -C config/puma.rb"
+    buildCommand: './bin/render-build.sh'
+    startCommand: 'bundle exec puma -C config/puma.rb'
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: tattoo_app_db
           property: connectionString
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: tattoo_app_db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: tattoo_app_db
+          property: password
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: tattoo_app_db
+          property: host
       - key: RAILS_MASTER_KEY
         sync: false
       - key: WEB_CONCURRENCY
