@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.2.2'
+ruby '3.2.8'
 
 # Rails 7
 gem 'rails', '~> 7.1.3'
@@ -13,11 +13,7 @@ gem 'puma', '~> 6.4'
 
 # Modern JavaScript & CSS support
 gem 'importmap-rails'
-gem 'jsbundling-rails'
-gem 'cssbundling-rails'
-gem 'terser'
-
-# Style preprocessor
+gem 'sprockets-rails'
 gem 'sassc-rails'
 
 # JSON builder
