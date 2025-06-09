@@ -15,6 +15,7 @@ gem 'puma', '~> 6.4'
 gem 'importmap-rails'
 gem 'sprockets-rails'
 gem 'sassc-rails'
+gem 'terser' # Add JavaScript compression for production
 
 # JSON builder
 gem 'jbuilder', '~> 2.11'
