@@ -10,13 +10,9 @@ Rails.application.routes.draw do
   # Session controller routes
   # This action shows a page with both a login and signup form
   get '/login' => 'session#form_login_signup'
-
-  # This action processes the form when someone clicks signup
-  # If the signup process is successful, they will be logged in and redirected
-  # to the home page (with a flash message, "thanks for joining").
-  # If the signup process fails (e.g. they didn't enter a valid email) they will
-  # be redirected back to the /login page, so they can complete the signup form
-  # again.
+  get '/signup' => 'session#form_login_signup', defaults: { show_signup: true }
+  
+  # Process signup form submission
   post '/signup' => 'session#process_signup'
 
   # This action processes the form when someone clicks login

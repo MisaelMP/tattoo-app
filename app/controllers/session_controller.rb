@@ -5,6 +5,7 @@ class SessionController < ApplicationController
   # This controller action shows the login and signup page
   def form_login_signup
     @user = User.new
+    @show_signup = params[:show_signup] # Used to show signup form by default when accessed via /signup
   rescue => e
     Rails.logger.error "Error in form_login_signup: #{e.message}"
     flash[:error] = "An error occurred. Please try again."
