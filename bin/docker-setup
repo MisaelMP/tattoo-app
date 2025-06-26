@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# Docker setup script for Tattoo App
+set -e
+
+echo "🐳 Setting up Docker for Tattoo App..."
+
+# Check if Docker is installed
+if ! command -v docker &> /dev/null; then
+    echo "❌ Docker is not installed. Please install Docker first."
+    exit 1
+fi
+
+# Check if Docker Compose is available (newer integrated version)
+if ! docker compose version &> /dev/null; then
+    echo "❌ Docker Compose is not available. Please ensure Docker Desktop is installed and running."
+    exit 1
+fi
+
+# Check if .env file exists
+if [ ! -f .env ]; then
+    echo "📝 Creating .env file from template..."
+    cp env.example .env
+    echo "⚠️  Please edit .env file with your actual values before continuing."
+    echo "   Especially important: RAILS_MASTER_KEY and CLOUDINARY_URL"
+    read -p "Press Enter when you've updated the .env file..."
+fi
+
+# Make entrypoint script executable
+chmod +x entrypoint.sh
+
+# Build Docker images
+echo "🔨 Building Docker images..."
+docker compose build
+
+# Start services
+echo "🚀 Starting services..."
+docker compose up -d
+
+# Wait for database to be ready
+echo "⏳ Waiting for database to be ready..."
+sleep 10
+
+# Create database
+echo "🗄️  Creating database..."
+docker compose exec -T web bundle exec rake db:create 2>/dev/null || echo "Database might already exist"
+
+# Run migrations
+echo "🔄 Running migrations..."
+docker compose exec -T web bundle exec rake db:migrate
+
+echo "✅ Setup complete!"
+echo ""
+echo "🌐 Your application should be available at: http://localhost:3000"
+echo "🗄️  Database is available at: localhost:5432"
+echo ""
+echo "📋 Useful commands:"
+echo "  - View logs: docker compose logs -f"
+echo "  - Stop services: docker compose down"
+echo "  - Rails console: docker compose exec web bundle exec rails console"
+echo "  - Run tests: docker compose exec web bundle exec rspec" 
